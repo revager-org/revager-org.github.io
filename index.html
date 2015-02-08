@@ -146,6 +146,12 @@
 				clickedId = activeLang + "-" + getCurrentPageId();
 			}
 
+      // check if screenshots should be displayed
+      var showScreenshots = false;
+      if (window.location.hash.indexOf("show-screenshots") != -1) {
+        showScreenshots = true;
+      }
+
 			// add anchor to current browser location
 			window.location.hash = "#page-" + clickedId;
 
@@ -173,6 +179,11 @@
 
             $("div#navigation ul li#" + clickedId).addClass("active");
             $("div#navigation ul li#" + activeLang).addClass("active");
+
+            // show screenshots
+            if (showScreenshots) {
+              $("#show-screenshots").click();
+            }
 
             // slide down again
             $('#content').slideDown('slow', function() {
@@ -269,13 +280,6 @@
 		// disable all animations while the page gets initialized
 		jQuery.fx.off = true;
 
-		// determine if screenshots should be opened
-		var showScreenshots = false;
-
-		if (window.location.hash.indexOf("show-screenshots") != -1) {
-			showScreenshots = true;
-		}
-
 		// set default language
 		setActiveLang(getCurrentLang());
 
@@ -296,12 +300,6 @@
 				return getScreenshotTitle(title, currentArray, currentIndex, currentOpts);
 			}
 		});
-
-
-		// open screenshots popup
-		if (showScreenshots) {
-			$("#show-screenshots").click();
-		}
 
 		// enable animations after init is complete
 		jQuery.fx.off = false;
@@ -334,7 +332,7 @@
           </div>
 
           <div id="content" class="contents">
-           <!-- <?php TODO echo file_get_contents("./pages/en-home.html") ?> -->
+           <!-- TODO: embed HTML of en-home page here -->
 
            <a href="https://launchpad.net/revager/+announcements">RevAger announcements</a>
           </div>
