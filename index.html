@@ -180,11 +180,6 @@
             $("div#navigation ul li#" + clickedId).addClass("active");
             $("div#navigation ul li#" + activeLang).addClass("active");
 
-            // show screenshots
-            if (showScreenshots) {
-              $("#show-screenshots").click();
-            }
-
             // slide down again
             $('#content').slideDown('slow', function() {
               // disclaimer popup box
@@ -247,6 +242,11 @@
                   }
                 });
               });
+
+              // show screenshots
+              if (showScreenshots) {
+                $("#show-screenshots").click();
+              }
             });
         
             //$("#content").animate({height: "100%"}, 400);
