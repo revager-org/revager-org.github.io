@@ -22,14 +22,14 @@
       @import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
 </style>
 <!--[if lte IE 6]>
-	<style type="text/css" media="all">
-	  @import "layout/ie6_diff.css";
-	</style> 
+  <style type="text/css" media="all">
+    @import "layout/ie6_diff.css";
+  </style> 
 <![endif]-->
 <!--[if gt IE 6]>
-	<style type="text/css" media="all">
-	  @import "layout/ie7_diff.css";
-	</style>
+  <style type="text/css" media="all">
+    @import "layout/ie7_diff.css";
+  </style>
 <![endif]-->
 
 <!-- pace -->
@@ -53,9 +53,9 @@
 
 
 <script type="text/javascript">
-	//parseUri.options.strictMode = true;
+  //parseUri.options.strictMode = true;
 
-	var navigations = {
+  var navigations = {
     de: [
       '<ul>',
       '  <li id="de-home"><a href="#">Home</a></li>',
@@ -80,7 +80,7 @@
     ].join('')
   };
 
-	var screenshotTitles = {
+  var screenshotTitles = {
     en: [ "Main Frame (Mac OS X)",
           "Aspects Manager (Mac OS X)",
           "List of Findings (Mac OS X)",
@@ -101,50 +101,50 @@
           "Review-Protokoll (Ubuntu 10.10)" ]
   };
 
-	var activeLang = 'en';
+  var activeLang = 'en';
 
-	var defaultPage = "en-home";
+  var defaultPage = "en-home";
 
-	function getCurrentPageName () {
-		var currentPageName = null;
+  function getCurrentPageName () {
+    var currentPageName = null;
 
-		var currentAnchor = window.location.hash.replace('#page-', '');
+    var currentAnchor = window.location.hash.replace('#page-', '');
 
     var navId = 'id="' + currentAnchor + '"';
 
-		if (navigations.en.indexOf(navId) > -1 || navigations.de.indexOf(navId) > -1) {
-			currentPageName = currentAnchor;
-		} else {
-			currentPageName = defaultPage;
-		}
+    if (navigations.en.indexOf(navId) > -1 || navigations.de.indexOf(navId) > -1) {
+      currentPageName = currentAnchor;
+    } else {
+      currentPageName = defaultPage;
+    }
 
-		return currentPageName;
-	};
+    return currentPageName;
+  };
 
-	function getCurrentPageId () {
-		return getCurrentPageName().substring(3);
-	};
+  function getCurrentPageId () {
+    return getCurrentPageName().substring(3);
+  };
 
-	function getCurrentLang () {
-		return getCurrentPageName().substr(0, 2);
-	};
+  function getCurrentLang () {
+    return getCurrentPageName().substr(0, 2);
+  };
 
-	function setActiveLang (lang) {
-		activeLang = lang;
+  function setActiveLang (lang) {
+    activeLang = lang;
 
-		$("div#navigation").html(navigations[lang]);
+    $("div#navigation").html(navigations[lang]);
 
-		updateScreenshotTitles();
+    updateScreenshotTitles();
 
-		$("div#navigation ul li").click(function() {
-			var clickedClasses = $(this).attr("class");
-			var clickedId = $(this).attr("id");
+    $("div#navigation ul li").click(function() {
+      var clickedClasses = $(this).attr("class");
+      var clickedId = $(this).attr("id");
 
-			// if change of language
-			if (clickedClasses.indexOf("langchange") != -1) {
-				setActiveLang(clickedId);
-				clickedId = activeLang + "-" + getCurrentPageId();
-			}
+      // if change of language
+      if (clickedClasses.indexOf("langchange") != -1) {
+        setActiveLang(clickedId);
+        clickedId = activeLang + "-" + getCurrentPageId();
+      }
 
       // check if screenshots should be displayed
       var showScreenshots = false;
@@ -152,23 +152,23 @@
         showScreenshots = true;
       }
 
-			// add anchor to current browser location
-			window.location.hash = "#page-" + clickedId;
+      // add anchor to current browser location
+      window.location.hash = "#page-" + clickedId;
 
-			// hide footer
-			$(".footerpart").hide();
+      // hide footer
+      $(".footerpart").hide();
 
-			// fade out
-			//$(".footerpart").fadeOut('fast', function () {
-			//$("#content").animate({height: "0px"}, 400, function() {
-			//$("html, body").animate({scrollTop:0}, 'fast', function() {
-				// fade out
-				//$("#content").fadeOut(400, function () {
+      // fade out
+      //$(".footerpart").fadeOut('fast', function () {
+      //$("#content").animate({height: "0px"}, 400, function() {
+      //$("html, body").animate({scrollTop:0}, 'fast', function() {
+        // fade out
+        //$("#content").fadeOut(400, function () {
 
-				// slide up
-				$("#content").slideUp('slow', function() {
+        // slide up
+        $("#content").slideUp('slow', function() {
 
-					// get content
+          // get content
           $.get("pages/" + clickedId + ".html", function(content) {
             // set content
             //$("#content").html(pages[clickedId]);
@@ -252,36 +252,33 @@
             //$("#content").animate({height: "100%"}, 400);
             //$("#content").fadeIn(400);
           });
-				});
-			//});
-		});
+        });
+      //});
+    });
 
-		$("div#navigation ul li a").click(function(event) {
-			event.preventDefault();
-		});
+    $("div#navigation ul li a").click(function(event) {
+      event.preventDefault();
+    });
 
-		$("div#navigation ul li").click(function(event) {
-			event.preventDefault();
- 		});
-	};
+    $("div#navigation ul li").click(function(event) {
+      event.preventDefault();
+     });
+  };
 
-	function updateScreenshotTitles () {
-		for (key in screenshotTitles[activeLang]) {
-			$('ul#screenshots li a#screenshot-' + key).attr('title', screenshotTitles[activeLang][key]);
-		}
-	};
+  function updateScreenshotTitles () {
+    for (key in screenshotTitles[activeLang]) {
+      $('ul#screenshots li a#screenshot-' + key).attr('title', screenshotTitles[activeLang][key]);
+    }
+  };
 
-	function getScreenshotTitle(title, currentArray, currentIndex, currentOpts) {
-		return '<span style="font-size:10pt; font-family:\'Droid Sans\', Arial, Verdana, sans-serif;">' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; &middot; &nbsp; ' + title : '') + '</span>';
-	};
+  function getScreenshotTitle(title, currentArray, currentIndex, currentOpts) {
+    return '<span style="font-size:10pt; font-family:\'Droid Sans\', Arial, Verdana, sans-serif;">' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; &middot; &nbsp; ' + title : '') + '</span>';
+  };
 
-	// when document is loaded completely
-	$(document).ready(function() {
-		// disable all animations while the page gets initialized
-		jQuery.fx.off = true;
-
-		// set default language
-		setActiveLang(getCurrentLang());
+  // when document is loaded completely
+  $(document).ready(function() {
+    // disable all animations while the page gets initialized
+    jQuery.fx.off = true;
 
     // init jcarousel
     jQuery('#screenshots').jcarousel({
@@ -296,12 +293,15 @@
       'titleFormat'   : getScreenshotTitle
     });
 
-		// set corresponding navigation
-		$('div#navigation ul li#' + getCurrentPageName()).click();
+    // set default language
+    setActiveLang(getCurrentLang());
 
-		// enable animations after init is complete
-		jQuery.fx.off = false;
-	});
+    // set corresponding navigation
+    $('div#navigation ul li#' + getCurrentPageName()).click();
+
+    // enable animations after init is complete
+    jQuery.fx.off = false;
+  });
 </script> 
 
 </head>
