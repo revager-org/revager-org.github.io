@@ -1,0 +1,408 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-GB">
+<head>
+<title>RevAger - The Review Manager</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="description" content="RevAger (Review Manager) is a platform-independent application for organizing and conducting reviews and inspections in a professional way." />
+<meta name="author" content="RevAger Developers" />
+<meta name="keywords" content="RevAger, Resi, Review, List of Findings, Finding, Inspection, Java, University of Stuttgart, Jochen Ludewig, Johannes Wettinger, Davide Casciato, Software Engineering, Software Development, Tool, Software Tool, Software Application, Free, Open-Source, Download, Quick Review, Checklists" />
+
+<!-- Favicon -->
+<link rel="icon" href="./favicon.ico" />
+
+<!-- ATOM Feed -->
+<link rel="alternate" type="application/atom+xml" href="http://feeds.launchpad.net/revager/announcements.atom" title="Announcements for RevAger" />
+
+<style type="text/css" media="all">
+      @import "layout/simplicity_two_point_oh.css";
+      @import "layout/awesome-buttons.css";
+
+      @import url(http://fonts.googleapis.com/css?family=Droid+Sans:regular,bold);
+      @import url(http://fonts.googleapis.com/css?family=Droid+Sans+Mono);
+</style>
+<!--[if lte IE 6]>
+	<style type="text/css" media="all">
+	  @import "layout/ie6_diff.css";
+	</style> 
+<![endif]-->
+<!--[if gt IE 6]>
+	<style type="text/css" media="all">
+	  @import "layout/ie7_diff.css";
+	</style>
+<![endif]-->
+
+<!-- pace -->
+<script src="./lib/pace.min.js"></script>
+<link href="./lib/pace.css" rel="stylesheet" />
+
+<!-- jQuery -->
+<script type="text/javascript" src="./lib/jquery.js"></script>
+
+<!-- Simple URI Parser -->
+<!-- <script type="text/javascript" src="./lib/parseuri.js"></script> -->
+
+<!-- jCarousel -->
+<script type="text/javascript" src="./lib/jcarousel/lib/jquery.jcarousel.min.js"></script>
+<link rel="stylesheet" type="text/css" href="./lib/jcarousel/skins/tango/skin.css" />
+
+<!-- fancybox -->
+<script type="text/javascript" src="./lib/fancybox/jquery.mousewheel-3.0.4.pack.js"></script>
+<script type="text/javascript" src="./lib/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+<link rel="stylesheet" type="text/css" href="./lib/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+
+
+<script type="text/javascript">
+	//parseUri.options.strictMode = true;
+
+	var navigations = {
+    de: [
+      '<ul>',
+      '  <li id="de-home"><a href="#">Home</a></li>',
+      '  <li id="de-download"><a href="#">Download</a></li>',
+      '  <li id="de-features"><a href="#">Features</a></li>',
+      '  <li id="de-development"><a href="#">Entwicklung</a></li>',
+      '  <li id="de-sitenotice"><a href="#">Impressum</a></li>',
+      '  <li id="en" class="langchange" style="margin-left:20px;"><a href="#"><img src="./img/english.png" alt="Englisch" title="Englisch" /></a></li>',
+      '  <li id="de" class="langchange"><a href="#"><img src="./img/german.png" alt="Deutsch" title="Deutsch" /></a></li>',
+      '</ul>'
+    ].join(''),
+    en: [
+      '<ul>',
+      '  <li id="en-home"><a href="#">Home</a></li>',
+      '  <li id="en-download"><a href="#">Download</a></li>',
+      '  <li id="en-features"><a href="#">Features</a></li>',
+      '  <li id="en-development"><a href="#">Development</a></li>',
+      '  <li id="en-sitenotice"><a href="#">Site Notice</a></li>',
+      '  <li id="en" class="langchange" style="margin-left:20px;"><a href="#"><img src="./img/english.png" alt="English" title="English" /></a></li>',
+      '  <li id="de" class="langchange"><a href="#"><img src="./img/german.png" alt="German" title="German" /></a></li>',
+      '</ul>'
+    ].join('')
+  };
+
+	var screenshotTitles = {
+    en: [ "Main Frame (Mac OS X)",
+          "Aspects Manager (Mac OS X)",
+          "List of Findings (Mac OS X)",
+          "Main Frame (Windows 7)",
+          "Aspects Manager (Windows 7)",
+          "List of Findings (Windows 7)",
+          "Main Frame (Ubuntu 10.10)",
+          "Aspects Manager (Ubuntu 10.10)",
+          "List of Findings (Ubuntu 10.10)" ],
+    de: [ "Hauptfenster (Mac OS X)",
+          "Prüfaspekte-Manager (Mac OS X)",
+          "Review-Protokoll (Mac OS X)",
+          "Hauptfenster (Windows 7)",
+          "Prüfaspekte-Manager (Windows 7)",
+          "Review-Protokoll (Windows 7)",
+          "Hauptfenster (Ubuntu 10.10)",
+          "Prüfaspekte-Manager (Ubuntu 10.10)",
+          "Review-Protokoll (Ubuntu 10.10)" ]
+  };
+
+	var activeLang = 'en';
+
+	var defaultPage = "en-home";
+
+	function getCurrentPageName () {
+		var currentPageName = null;
+
+		var currentAnchor = window.location.hash.replace('#page-', '');
+
+    var navId = 'id="' + currentAnchor + '"';
+
+		if (navigations.en.indexOf(navId) > -1 || navigations.de.indexOf(navId) > -1) {
+			currentPageName = currentAnchor;
+		} else {
+			currentPageName = defaultPage;
+		}
+
+		return currentPageName;
+	};
+
+	function getCurrentPageId () {
+		return getCurrentPageName().substring(3);
+	};
+
+	function getCurrentLang () {
+		return getCurrentPageName().substr(0, 2);
+	};
+
+	function setActiveLang (lang) {
+		activeLang = lang;
+
+		$("div#navigation").html(navigations[lang]);
+
+		updateScreenshotTitles();
+
+		$("div#navigation ul li").click(function() {
+			var clickedClasses = $(this).attr("class");
+			var clickedId = $(this).attr("id");
+
+			// if change of language
+			if (clickedClasses.indexOf("langchange") != -1) {
+				setActiveLang(clickedId);
+				clickedId = activeLang + "-" + getCurrentPageId();
+			}
+
+			// add anchor to current browser location
+			window.location.hash = "#page-" + clickedId;
+
+			// hide footer
+			$(".footerpart").hide();
+
+			// fade out
+			//$(".footerpart").fadeOut('fast', function () {
+			//$("#content").animate({height: "0px"}, 400, function() {
+			//$("html, body").animate({scrollTop:0}, 'fast', function() {
+				// fade out
+				//$("#content").fadeOut(400, function () {
+
+				// slide up
+				$("#content").slideUp('slow', function() {
+
+					// get content
+          $.get("pages/" + clickedId + ".html", function(content) {
+            // set content
+            //$("#content").html(pages[clickedId]);
+            $("#content").html(content);
+
+            // set active tabs
+            $("div#navigation ul li").removeClass("active");
+
+            $("div#navigation ul li#" + clickedId).addClass("active");
+            $("div#navigation ul li#" + activeLang).addClass("active");
+
+            // slide down again
+            $('#content').slideDown('slow', function() {
+              // disclaimer popup box
+              $("#disclaimer").fancybox({
+                'titlePosition'   : 'inside',
+                'transitionIn'    : 'fade',
+                'transitionOut'   : 'fade'
+              });
+
+              // news popup boxes
+              /*var i = 1;
+              for (i=1; i<=10; i++) {
+                $("#news-" + i).fancybox({
+                  'titlePosition'   : 'inside',
+                  'transitionIn'    : 'fade',
+                  'transitionOut'   : 'fade'
+                });
+              }*/
+
+              // features link
+              $("#show-features").click(function() {
+                $("div#navigation ul li#" + activeLang + "-features").click();
+              });
+
+              // fade in footer
+              $(".footerpart").fadeIn('slow');
+
+              // screenshot link
+              $("#show-screenshots").click(function(event) {
+                event.preventDefault();
+
+                $.fancybox([
+                  {'href' : './img/screenshots/screenshot-0.png',
+                  'title' : screenshotTitles[activeLang][0]},
+                  {'href' : './img/screenshots/screenshot-1.png',
+                  'title' : screenshotTitles[activeLang][1]},
+                  {'href' : './img/screenshots/screenshot-2.png',
+                  'title' : screenshotTitles[activeLang][2]},
+                  {'href' : './img/screenshots/screenshot-3.png',
+                  'title' : screenshotTitles[activeLang][3]},
+                  {'href' : './img/screenshots/screenshot-4.png',
+                  'title' : screenshotTitles[activeLang][4]},
+                  {'href' : './img/screenshots/screenshot-5.png',
+                  'title' : screenshotTitles[activeLang][5]},
+                  {'href' : './img/screenshots/screenshot-6.png',
+                  'title' : screenshotTitles[activeLang][6]},
+                  {'href' : './img/screenshots/screenshot-7.png',
+                  'title' : screenshotTitles[activeLang][7]},
+                  {'href' : './img/screenshots/screenshot-8.png',
+                  'title' : screenshotTitles[activeLang][8]}
+                ], {
+                  //'padding' : 0,
+                  'transitionIn'  : 'fade',
+                  'transitionOut' : 'fade',
+                  'type'    : 'image',
+                  //'changeFade'  : 0
+                  'titlePosition' : 'inside',
+                  'titleFormat' : function(title, currentArray, currentIndex, currentOpts) {
+                    return getScreenshotTitle(title, currentArray, currentIndex, currentOpts);
+                  }
+                });
+              });
+            });
+        
+            //$("#content").animate({height: "100%"}, 400);
+            //$("#content").fadeIn(400);
+          });
+				});
+			//});
+		});
+
+		$("div#navigation ul li a").click(function(event) {
+			event.preventDefault();
+		});
+
+		$("div#navigation ul li").click(function(event) {
+			event.preventDefault();
+ 		});
+	};
+
+	function updateScreenshotTitles () {
+		for (key in screenshotTitles[activeLang]) {
+			$('ul#screenshots li a#screenshot-' + key).attr('title', screenshotTitles[activeLang][key]);
+		}
+	};
+
+	function getScreenshotTitle(title, currentArray, currentIndex, currentOpts) {
+		return '<span style="font-size:10pt; font-family:\'Droid Sans\', Arial, Verdana, sans-serif;">' + (currentIndex + 1) + ' / ' + currentArray.length + (title.length ? ' &nbsp; &middot; &nbsp; ' + title : '') + '</span>';
+	};
+
+	// when document is loaded completely
+	$(document).ready(function() {
+		// disable all animations while the page gets initialized
+		jQuery.fx.off = true;
+
+		// determine if screenshots should be opened
+		var showScreenshots = false;
+
+		if (window.location.hash.indexOf("show-screenshots") != -1) {
+			showScreenshots = true;
+		}
+
+		// set default language
+		setActiveLang(getCurrentLang());
+
+		// set corresponding navigation
+		$('div#navigation ul li#' + getCurrentPageName()).click();
+
+		// init jcarousel
+		jQuery('#screenshots').jcarousel({
+			visible: 3
+		});
+
+		// init fancybox
+		$("a[rel=screenshot]").fancybox({
+			'transitionIn'		: 'fade',
+			'transitionOut'		: 'fade',
+			'titlePosition' 	: 'inside',
+			'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
+				return getScreenshotTitle(title, currentArray, currentIndex, currentOpts);
+			}
+		});
+
+
+		// open screenshots popup
+		if (showScreenshots) {
+			$("#show-screenshots").click();
+		}
+
+		// enable animations after init is complete
+		jQuery.fx.off = false;
+	});
+</script> 
+
+</head>
+
+<body>
+
+<div style="text-align: center; margin-bottom: 0; margin-top: 20px; padding: 0;">
+  <img src="./img/revager.png" alt="RevAger - The Review Manager" />
+</div>
+
+<div style="text-align: center; margin: 0; padding: 0;">
+  <h1 style="text-align: center; margin: 0; padding: 0; font-size: 110%; font-weight: normal;">RevAger - The Review Manager</h1>
+</div>
+
+
+<div id="window">
+  <div id="container">
+
+    <div id="navigation" class="navigation"></div>
+
+    <div class="main">
+      <div class="outer-prettification">
+        <div class="inner-prettification">
+          <div class="header">
+            <h1 class="title"> <a name="header"></a> </h1>
+          </div>
+
+          <div id="content" class="contents">
+           <!-- <?php TODO echo file_get_contents("./pages/en-home.html") ?> -->
+
+           <a href="https://launchpad.net/revager/+announcements">RevAger announcements</a>
+          </div>
+
+          <div class="footer">
+            <p><a name="copyright">&copy; RevAger Developers</a></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footerpart" style="width: 445px; margin-left: auto; margin-right: auto;">
+      <ul id="screenshots" class="jcarousel-skin-tango">
+        <li>
+          <a id="screenshot-0" rel="screenshot" href="./img/screenshots/screenshot-0.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-0.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-1" rel="screenshot" href="./img/screenshots/screenshot-1.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-1.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-2" rel="screenshot" href="./img/screenshots/screenshot-2.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-2.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-3" rel="screenshot" href="./img/screenshots/screenshot-3.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-3.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-4" rel="screenshot" href="./img/screenshots/screenshot-4.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-4.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-5" rel="screenshot" href="./img/screenshots/screenshot-5.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-5.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-6" rel="screenshot" href="./img/screenshots/screenshot-6.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-6.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-7" rel="screenshot" href="./img/screenshots/screenshot-7.png">
+            <img class="jcarousel-item-image" src="./img/screenshots/screenshot-7.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+        <li>
+          <a id="screenshot-8" rel="screenshot" href="./img/screenshots/screenshot-8.png">
+            <img class="last jcarousel-item-image" src="./img/screenshots/screenshot-8.png" width="110" height="85" alt="" />
+          </a>
+        </li>
+      </ul>
+    </div>
+
+    <!--
+    <div class="footerpart" style="width: 190px; margin-left: auto; margin-right: auto; padding-left: 15px; padding-top:10px; padding-bottom:15px;">
+    </div>
+    -->
+
+  </div>
+</div>
+
+</body>
+</html>
