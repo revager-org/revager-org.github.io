@@ -283,23 +283,21 @@
 		// set default language
 		setActiveLang(getCurrentLang());
 
+    // init jcarousel
+    jQuery('#screenshots').jcarousel({
+      visible: 3
+    });
+
+    // init fancybox
+    $("a[rel=screenshot]").fancybox({
+      'transitionIn'  : 'fade',
+      'transitionOut' : 'fade',
+      'titlePosition' : 'inside',
+      'titleFormat'   : getScreenshotTitle
+    });
+
 		// set corresponding navigation
 		$('div#navigation ul li#' + getCurrentPageName()).click();
-
-		// init jcarousel
-		jQuery('#screenshots').jcarousel({
-			visible: 3
-		});
-
-		// init fancybox
-		$("a[rel=screenshot]").fancybox({
-			'transitionIn'		: 'fade',
-			'transitionOut'		: 'fade',
-			'titlePosition' 	: 'inside',
-			'titleFormat'		: function(title, currentArray, currentIndex, currentOpts) {
-				return getScreenshotTitle(title, currentArray, currentIndex, currentOpts);
-			}
-		});
 
 		// enable animations after init is complete
 		jQuery.fx.off = false;
