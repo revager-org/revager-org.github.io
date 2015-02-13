@@ -165,11 +165,11 @@
         // fade out
         //$("#content").fadeOut(400, function () {
 
-        // retrieve content
-        $.get("pages/" + clickedId + ".html", function(content) {
+        // slide up
+        $("#content").slideUp('slow', function() {
 
-          // slide up
-          $("#content").slideUp('slow', function() {
+          // retrieve content
+          $.get("pages/" + clickedId + ".html", function(content) {
             //$("#content").html(pages[clickedId]);
             $("#content").html(content);
 
