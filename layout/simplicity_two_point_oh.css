@@ -59,14 +59,14 @@ background:#fff url(images/bg.png) repeat-x;
 /*background-color:#fff;*/
 color:#000;
 font-size:80%;
-font-family:'Droid Sans', Arial, Verdana, sans-serif;
+font-family:Arial, Verdana, sans-serif;
 margin:0;
 padding:0;
 }
 
 td {
 font-size:110%;
-font-family:'Droid Sans', Arial, Verdana, sans-serif;
+font-family:Arial, Verdana, sans-serif;
 }
 
 h2,h3 {
@@ -203,7 +203,7 @@ font-size:90%;
 border:solid 1px #999;
 background-color:#333;
 color:#eee;
-font-family:'Droid Sans Mono', Courier, Monospace, arial, serif;
+font-family:Courier, Monospace, arial, serif;
 white-space:pre;
 padding-bottom:0.6em;
 }
@@ -270,7 +270,7 @@ padding-left:10px;
 div.navigation {
 float:left;
 margin-bottom:-2px;
-margin-left:92px;
+margin-left:60px;
 }
 
 div.navigation ul {
